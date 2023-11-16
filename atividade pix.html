@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Banco Etec</title>
+</head>
+
+<body>
+    <h1>Banco da Etec</h1>
+    <h2>Faça um pix para outra pessoa</h2>
+    <p>Contas Pagantes: <span id="cpfpag"></span></p>
+    <p>Nomes Pagantes: <span id="nomepag"></span></p>
+    <p>Saldos Pagantes: <span id="saldopag"></span></p>
+    <p>Contas Destinatários: <span id="cpfdest"></span></p>
+    <p>Nomes Destinatários: <span id="nomedest"></span></p>
+    <p>Saldos Destinatários: <span id="saldodest"></span></p>
+    <p>Valores de transferências: <span id="trans"></span></p>
+    <p>Saldos Finais Pagantes: <span id="saldofinalpag"></span></p>
+    <p>Saldos Finais Destinatários: <span id="saldofinaldest"></span></p>
+    <script>
+        let cpf
+        let cpf1 = []
+        let inicio
+        if (cpf1.length <= 1) {
+            inicio = Number(prompt("Escolha\n[1] - Cadastrar conta\n[2] - Sair"))
+            while (inicio < 1 || inicio > 2 || inicio % 1 != 0) {
+                alert("Opção inválida")
+                inicio = Number(prompt("Escolha\n[1] - Cadastrar conta\n[2] - Sair"))
+            }
+        } else {
+            inicio = Number(prompt("Escolha\n[1] - Cadastrar conta\n[2] - Fazer um pix\n[3] - Sair"))
+            while (inicio < 1 || inicio > 2 || inicio % 1 != 0) {
+                alert("Opção inválida")
+                inicio = Number(prompt("Escolha\n[1] - Cadastrar conta\n[2] - Fazer um pix\n[3] - Sair"))
+            }
+
+        }
+
+        let nome
+        let nome1 = []
+        let saldo
+        let saldo1 = []
+        let escolhatxt
+        let escolha1
+        let trans
+        let saldopag
+        let saldodest
+        let saldofinalpag
+        let saldofinaldest
+        let i = 1
+        while (inicio == 1 || inicio == 2) {
+            while (inicio == 1) {
+                cpf = cadastrarcpf(i)
+                cpf1.push(cpf)
+                nome = cadastrarnome(i)
+                nome1.push(nome)
+                saldo = cadastrarsaldo(i)
+                saldo1.push(saldo)
+                i++
+                if (cpf1.length <= 1) {
+                    inicio = Number(prompt("Escolha\n[1] - Cadastrar conta\n[2] - Sair"))
+                    while (inicio < 1 || inicio > 2 || inicio % 1 != 0) {
+                        alert("Opção inválida")
+                        inicio = Number(prompt("Escolha\n[1] - Cadastrar conta\n[2] - Sair"))
+                    }
+                } else {
+                    inicio = Number(prompt("Escolha\n[1] - Cadastrar conta\n[2] - Fazer um pix\n[3] - Sair"))
+                    while (inicio < 1 || inicio > 3 || inicio % 1 != 0) {
+                        alert("Opção inválida")
+                        inicio = Number(prompt("Escolha\n[1] - Cadastrar conta\n[2] - Fazer um pix\n[3] - Sair"))
+                    }
+                }
+            }
+            while (inicio == 2) {
+                escolhatxt = escolherconta(cpf1.length)
+                saldopag = saldo1[escolhatxt]
+                document.getElementById("saldopag").innerHTML += "R$ " + saldopag.toFixed(2) + "\n"
+                trans = verificartransferencia(saldo1[escolha])
+                while (trans == false) {
+                    alert('Não será possível realizar essa transferência, por favor selecione outra conta')
+                    escolhatxt = escolherconta(cpf1.length)
+                    trans = verificartransferencia(saldo1[escolha])
+                }
+                alert("Será possível de realizar essa transferência")
+                escolha1 = escolhercontadestinatario(cpf1.length)
+                while (escolhatxt == escolha1) {
+                    alert("Foi fornecido a mesma conta")
+                    alert("Escolha uma conta diferente")
+                    escolha1 = escolhercontadestinatario(cpf1.length)
+                }
+                saldodest = saldo1[escolha1]
+                document.getElementById("saldodest").innerHTML += "R$ " + saldodest.toFixed(2) + "\n"
+                saldo1[escolhatxt] = saldo1[escolhatxt] - trans
+                saldo1[escolha1] = trans + saldo1[escolha1]
+                saldofinalpag = saldo1[escolhatxt]
+                saldofinaldest = saldo1[escolha1]
+                document.getElementById("cpfpag").innerHTML += cpf1[escolhatxt] + "\n"
+                document.getElementById("nomepag").innerHTML += nome1[escolhatxt] + "\n"
+                document.getElementById("cpfdest").innerHTML += cpf1[escolha1] + "\n"
+                document.getElementById("nomedest").innerHTML += nome1[escolha1] + "\n"
+                document.getElementById("trans").innerHTML += "R$" + trans.toFixed(2) + "\n"
+                document.getElementById("saldofinalpag").innerHTML += "R$ " + saldofinalpag.toFixed(2) + "\n"
+                document.getElementById("saldofinaldest").innerHTML += "R$" + saldofinaldest.toFixed(2) + "\n"
+                inicio = Number(prompt("Escolha\n[1] - Cadastrar conta\n[2] - Fazer um pix\n[3] - Sair"))
+                while (inicio < 1 || inicio > 3 || inicio % 1 != 0) {
+                    alert("Opção inválida")
+                    inicio = Number(prompt("Escolha\n[1] - Cadastrar conta\n[2] - Fazer um pix\n[3] - Sair"))
+                }
+            }
+        }
+        function cadastrarcpf(i) {
+            cpf = Number(prompt("Digite o CPF à " + i + "ª conta:"))
+            while (cpf % 1 != 0 || cpf == 0) {
+                alert('CPF digitado errado')
+                cpf = prompt("Digite o CPF à " + i + "ª conta:")
+            }
+            i++
+            return cpf
+        }
+        function cadastrarnome(i) {
+            nome = prompt("Digite o nome à " + i + "ª conta:")
+            while (nome == "" || nome == null) {
+                alert("Você pressionou Cancelar ou deixou em branco.")
+                nome = prompt("Digite o nome à " + i + "ª conta:")
+            }
+            return nome
+        }
+        function cadastrarsaldo(i) {
+            saldo = prompt("Digite o saldo à " + i + "ª conta:")
+            while (isNaN(saldo)) {
+                alert('Saldo digitado errado')
+                saldo = prompt("Digite o saldo à " + i + "ª conta:")
+                while (saldo <= 0) {
+                    alert("Saldo 0 ou inferior, não dará para fazer um pix, mas você pode receber um pix")
+                    escolha = Number(prompt("Deseja recadastra o saldo\n[1] - Recadastrar saldo\n[2] - Não recadastrar"))
+                    while (escolha < 1 || escolha > 2 || escolha % 1 != 0) {
+                        alert("Opção inválida")
+                        escolha = Number(prompt("Deseja recadastra o saldo\n[1] - Recadastrar saldo\n[2] - Não recadastrar"))
+                    }
+                    if (escolha == 1)
+                        saldo = prompt("Digite o saldo à " + i + "ª conta:")
+                    while (isNaN(saldo)) {
+                        alert('Saldo digitado errado')
+                        saldo = prompt("Digite o saldo à " + i + "ª conta:")
+                    }
+                    if (escolha == 2) {
+                        break
+                    }
+
+                }
+                
+            }
+            return saldo
+        }
+        function verificartransferencia(saldo) {
+            trans = Number(prompt("Digite o valor a ser tranferido:"))
+            while (trans <= 0) {
+                alert("Valor de transferência inválido")
+                trans = Number(prompt("Digite o valor a ser tranferido:"))
+            }
+            if (trans <= saldo) { return trans }
+            else { return false }
+        }
+        function escolherconta(tamanho) {
+
+            escolha = Number(prompt("Escolha a conta do pagante: " + tamanho))
+            while (escolha % 1 != 0 || escolha <= 0) {
+                alert("Digite uma conta válida")
+                escolha = Number(prompt("Escolha a conta do pagante: " + tamanho))
+            }
+            while (escolha > tamanho) {
+                alert("A conta escolhida foi inválida")
+                escolha = Number(prompt("Escolha a conta do pagante: " + tamanho))
+                while (escolha % 1 != 0 || escolha == 0) {
+                    alert("Digite uma conta válida")
+                    escolha = Number(prompt("Escolha a conta do pagante: " + tamanho))
+                }
+            }
+            return escolha - 1
+        }
+        function escolhercontadestinatario(tamanho) {
+            escolha = Number(prompt("Escolha a conta do destinatário: " + tamanho))
+            while (escolha % 1 != 0 || escolha <= 0) {
+                alert("Digite uma conta válida")
+                escolha = Number(prompt("Escolha a conta do destinatário: " + tamanho))
+            }
+            while (escolha > tamanho) {
+                alert("A conta escolhida foi inválida")
+                escolha = Number(prompt("Escolha a conta do destinatário: " + tamanho))
+                while (escolha % 1 != 0 || escolha == 0) {
+                    alert("Digite uma conta válida")
+                    escolha = Number(prompt("Escolha a conta do destinatário: " + tamanho))
+                }
+            }
+            return escolha - 1
+        }
+    </script>
+</body>
+
+</html>
