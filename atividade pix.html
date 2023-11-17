@@ -10,16 +10,17 @@
 <body>
     <h1>Banco da Etec</h1>
     <h2>Faça um pix para outra pessoa</h2>
-    <p>Contas Pagantes: <span id="cpfpag"></span></p>
-    <p>Nomes Pagantes: <span id="nomepag"></span></p>
-    <p>Saldos Pagantes: <span id="saldopag"></span></p>
-    <p>Contas Destinatários: <span id="cpfdest"></span></p>
-    <p>Nomes Destinatários: <span id="nomedest"></span></p>
-    <p>Saldos Destinatários: <span id="saldodest"></span></p>
-    <p>Valores de transferências: <span id="trans"></span></p>
-    <p>Saldos Finais Pagantes: <span id="saldofinalpag"></span></p>
-    <p>Saldos Finais Destinatários: <span id="saldofinaldest"></span></p>
+    <p>Conta Pagante 1: <span id="cpfpag"></span></p>
+    <p>Nome Pagante 1: <span id="nomepag"></span></p>
+    <p>Saldo Pagante 1: <span id="saldopag"></span></p>
+    <p>Conta Destinatário 1: <span id="cpfdest"></span></p>
+    <p>Nome Destinatário 1 : <span id="nomedest"></span></p>
+    <p>Saldo Destinatário 1: <span id="saldodest"></span></p>
+    <p>Valor de transferência 1: <span id="trans"></span></p>
+    <p>Saldo Final Pagante 1: <span id="saldofinalpag"></span></p>
+    <p>Saldo Final Destinatário 1: <span id="saldofinaldest"></span></p>
     <script>
+        let i = 1
         let cpf
         let cpf1 = []
         let inicio
@@ -37,7 +38,6 @@
             }
 
         }
-
         let nome
         let nome1 = []
         let saldo
@@ -49,7 +49,6 @@
         let saldodest
         let saldofinalpag
         let saldofinaldest
-        let i = 1
         while (inicio == 1 || inicio == 2) {
             while (inicio == 1) {
                 cpf = cadastrarcpf(i)
@@ -65,6 +64,7 @@
                         alert("Opção inválida")
                         inicio = Number(prompt("Escolha\n[1] - Cadastrar conta\n[2] - Sair"))
                     }
+                    
                 } else {
                     inicio = Number(prompt("Escolha\n[1] - Cadastrar conta\n[2] - Fazer um pix\n[3] - Sair"))
                     while (inicio < 1 || inicio > 3 || inicio % 1 != 0) {
@@ -76,12 +76,12 @@
             while (inicio == 2) {
                 escolhatxt = escolherconta(cpf1.length)
                 saldopag = saldo1[escolhatxt]
-                document.getElementById("saldopag").innerHTML += "R$ " + saldopag.toFixed(2) + "\n"
-                trans = verificartransferencia(saldo1[escolha])
+                document.getElementById("saldopag").innerHTML += "R$ " + saldopag.toFixed(2) + "<br>Saldo Pagante " + i + ": "
+                trans = verificartransferencia(saldo1[escolhatxt])
                 while (trans == false) {
                     alert('Não será possível realizar essa transferência, por favor selecione outra conta')
                     escolhatxt = escolherconta(cpf1.length)
-                    trans = verificartransferencia(saldo1[escolha])
+                    trans = verificartransferencia(saldo1[escolhatxt])
                 }
                 alert("Será possível de realizar essa transferência")
                 escolha1 = escolhercontadestinatario(cpf1.length)
@@ -91,18 +91,18 @@
                     escolha1 = escolhercontadestinatario(cpf1.length)
                 }
                 saldodest = saldo1[escolha1]
-                document.getElementById("saldodest").innerHTML += "R$ " + saldodest.toFixed(2) + "\n"
+                document.getElementById("saldodest").innerHTML += "R$ " + saldodest.toFixed(2) + "<br>Saldo Destinatário: "
                 saldo1[escolhatxt] = saldo1[escolhatxt] - trans
                 saldo1[escolha1] = trans + saldo1[escolha1]
                 saldofinalpag = saldo1[escolhatxt]
                 saldofinaldest = saldo1[escolha1]
-                document.getElementById("cpfpag").innerHTML += cpf1[escolhatxt] + "\n"
-                document.getElementById("nomepag").innerHTML += nome1[escolhatxt] + "\n"
-                document.getElementById("cpfdest").innerHTML += cpf1[escolha1] + "\n"
-                document.getElementById("nomedest").innerHTML += nome1[escolha1] + "\n"
-                document.getElementById("trans").innerHTML += "R$" + trans.toFixed(2) + "\n"
-                document.getElementById("saldofinalpag").innerHTML += "R$ " + saldofinalpag.toFixed(2) + "\n"
-                document.getElementById("saldofinaldest").innerHTML += "R$" + saldofinaldest.toFixed(2) + "\n"
+                document.getElementById("cpfpag").innerHTML += cpf1[escolhatxt] + "<br>"
+                document.getElementById("nomepag").innerHTML += nome1[escolhatxt] + "<br>"
+                document.getElementById("cpfdest").innerHTML += cpf1[escolha1] + "<br>"
+                document.getElementById("nomedest").innerHTML += nome1[escolha1] + "<br>"
+                document.getElementById("trans").innerHTML += "R$ " + trans.toFixed(2) + "<br>"
+                document.getElementById("saldofinalpag").innerHTML += "R$ " + saldofinalpag.toFixed(2) + "<br>"
+                document.getElementById("saldofinaldest").innerHTML += "R$" + saldofinaldest.toFixed(2) + "<br>"
                 inicio = Number(prompt("Escolha\n[1] - Cadastrar conta\n[2] - Fazer um pix\n[3] - Sair"))
                 while (inicio < 1 || inicio > 3 || inicio % 1 != 0) {
                     alert("Opção inválida")
@@ -110,6 +110,7 @@
                 }
             }
         }
+
         function cadastrarcpf(i) {
             cpf = Number(prompt("Digite o CPF à " + i + "ª conta:"))
             while (cpf % 1 != 0 || cpf == 0) {
@@ -150,7 +151,7 @@
                     }
 
                 }
-                
+
             }
             return saldo
         }
