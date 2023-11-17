@@ -20,7 +20,8 @@
     <p>Saldo final pagante: <span id="saldofinalpag"></span></p>
     <p>Saldo final Destinatário: <span id="saldofinaldest"></span></p>
     <script>
-        let inicio2 = 1
+        let inicio2
+        let inicio3
         let inicio = Number(prompt("Escolha\n[1] - Cadastrar conta\n[2] - Sair"))
         while (inicio < 1 || inicio > 2 || inicio % 1 != 0) {
             alert("Opção inválida")
@@ -44,29 +45,24 @@
         if (inicio == 1) {
             cadastrar()
         }
-
         if (inicio2 == 1) {
-            escolhatxt = escolherconta(cpf1.length)
+            escolhatxt = escolherconta(cpf1.length, cpf1)
             saldopag = saldo1[escolhatxt]
             document.getElementById("saldopag").innerHTML = "R$" + saldopag.toFixed(2)
             trans = verificartransferencia(saldo1[escolhatxt])
-
             while (trans == false) {
                 alert('Não será possível realizar essa transferência, por favor selecione outra conta')
-                escolhatxt = escolherconta(cpf1.length)
+                escolhatxt = escolherconta(cpf1.length, cpf1)
                 trans = verificartransferencia(saldo1[escolhatxt])
             }
             alert("Será possível de realizar essa transferência")
-            escolha1 = escolhercontadestinatario(cpf1.length)
+            if (cpf1.length - 1 == escolhatxt) {
+                escolha1 = escolhercontadestinatario(cpf1.length - 1, cpf1[escolhatxt - 1])
+            } else {
+                escolha1 = escolhercontadestinatario(cpf1.length - 1, cpf1[escolhatxt + 1]) + 1
+            }
             saldodest = saldo1[escolha1]
             document.getElementById("saldodest").innerHTML = "R$ " + saldodest.toFixed(2)
-
-            while (escolha1 == escolhatxt) {
-                alert("Selecionada a mesma conta")
-                alert("Selecione outra")
-                escolha1 = escolhercontadestinatario(cpf1.length)
-            }
-
             saldo1[escolhatxt] = saldo1[escolhatxt] - trans
             saldo1[escolha1] = trans + saldo1[escolha1]
             saldofinalpag = saldo1[escolhatxt]
@@ -76,8 +72,6 @@
             document.getElementById("nomepag").innerHTML = nome1[escolhatxt]
             document.getElementById("cpfdest").innerHTML = cpf1[escolha1]
             document.getElementById("nomedest").innerHTML = nome1[escolha1]
-
-
             document.getElementById("trans").innerHTML = "R$ " + trans.toFixed(2)
             document.getElementById("saldofinaldest").innerHTML = "R$" + saldofinaldest.toFixed(2)
         }
@@ -90,7 +84,18 @@
                 nome1.push(nome)
                 saldo = cadastrarsaldo()
                 saldo1.push(saldo)
+                alert("Conta cadastrada com sucesso\nDeseja ver os dados cadastrados")
+                inicio3 = Number(prompt("Escolha\n[1] - Ver conta\n[2] - Sair"))
+                while (inicio3 < 1 || inicio3 > 2 || inicio3 % 1 != 0) {
+                    alert("Opção inválida")
+                    inicio3 = Number(prompt("Escolha\n[1] - Ver conta\n[2] - Sair"))
+                }
+                if (inicio3 == 1) {
+                    alert("CPF: " + cpf + " Nome: " + nome + " Saldo: " + saldo)
+                }
+
             }
+
             inicio2 = Number(prompt("Escolha\n[1] - Fazer um pix\n[2] - Sair"))
             while (inicio2 < 1 || inicio2 > 2 || inicio2 % 1 != 0) {
                 alert("Opção inválida")
@@ -148,35 +153,35 @@
             if (trans <= saldo) { return trans }
             else { return false }
         }
-        function escolherconta(tamanho) {
+        function escolherconta(tamanho, cpf) {
 
-            escolha = Number(prompt("Escolha a conta do pagante: " + tamanho))
+            escolha = Number(prompt("Escolha a conta do pagante: " + cpf + "\nEscolha a conta 1 ou a conta 2"))
             while (escolha % 1 != 0 || escolha <= 0) {
                 alert("Digite uma conta válida")
-                escolha = Number(prompt("Escolha a conta do pagante: " + tamanho))
+                escolha = Number(prompt("Escolha a conta do pagante: " + cpf))
             }
             while (escolha > tamanho) {
                 alert("A conta escolhida foi inválida")
-                escolha = Number(prompt("Escolha a conta do pagante: " + tamanho))
+                escolha = Number(prompt("Escolha a conta do pagante: " + cpf + "\nEscolha a conta 1 ou a conta 2"))
                 while (escolha % 1 != 0 || escolha == 0) {
                     alert("Digite uma conta válida")
-                    escolha = Number(prompt("Escolha a conta do pagante: " + tamanho))
+                    escolha = Number(prompt("Escolha a conta do pagante: " + cpf + "\nEscolha a conta 1 ou a conta 2"))
                 }
             }
             return escolha - 1
         }
-        function escolhercontadestinatario(tamanho) {
-            escolha = Number(prompt("Escolha a conta do destinatário: " + tamanho))
+        function escolhercontadestinatario(tamanho, cpf) {
+            escolha = Number(prompt("Escolha a conta do destinatário: " + cpf + "\nDigite 1"))
             while (escolha % 1 != 0 || escolha <= 0) {
                 alert("Digite uma conta válida")
-                escolha = Number(prompt("Escolha a conta do destinatário: " + tamanho))
+                escolha = Number(prompt("Escolha a conta do destinatário: " + cpf + "\nDigite 1"))
             }
             while (escolha > tamanho) {
                 alert("A conta escolhida foi inválida")
-                escolha = Number(prompt("Escolha a conta do destinatário: " + tamanho))
+                escolha = Number(prompt("Escolha a conta do destinatário: " + cpf + "\nDigite 1"))
                 while (escolha % 1 != 0 || escolha == 0) {
                     alert("Digite uma conta válida")
-                    escolha = Number(prompt("Escolha a conta do destinatário: " + tamanho))
+                    eescolha = Number(prompt("Escolha a conta do destinatário: " + cpf + "\nDigite 1"))
                 }
             }
             return escolha - 1
